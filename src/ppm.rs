@@ -5,7 +5,13 @@ use std::path::Path;
 struct PPMImage {
     width: u32,
     height: u32,
-    data: Vec<Vec<u8>>
+    data: Vec<Vec<PPMPixel>>
+}
+
+struct PPMPixel {
+    r: u32,
+    g: u32,
+    b: u32
 }
 
 fn save_ppm_image(image: &PPMImage, filename: &str) -> std::io::Result<()> {
@@ -19,16 +25,12 @@ fn save_ppm_image(image: &PPMImage, filename: &str) -> std::io::Result<()> {
     let mut file = LineWriter::new(file);
     file.write(b"P3\n")?;
     file.write(format!("{} {}\n", image.width, image.height).as_bytes())?;
+    file.write(b"255\n")?;
     for row in image.data.iter() {
         for el in row.iter() {
-            file.write(format!("{} ", el).as_bytes())?;
+            file.write(format!("{} {} {} ", el.r, el.g, el.b).as_bytes())?;
         }
         file.write(b"\n")?;
-    }
-
-    match file.write_all(image.data.concat().as_slice()) {
-        Err(why) => panic!("couldn't write to {}: {}", path.display(), why.to_string()),
-        Ok(_) => println!("successfully wrote to {}", path.display()),
     }
 
     Ok(())
@@ -41,19 +43,21 @@ mod tests {
 
     #[test]
     fn file_is_saved() {
-        let img = PPMImage{width: 3, height: 3, data: vec![vec![1, 2, 3], vec![4, 5, 6]]};
-        let _ = save_ppm_image(&img, "test.png");
+        let img = PPMImage{width: 3, height: 2, data: vec![vec![PPMPixel{r: 1, g: 1, b: 1}, PPMPixel{r: 0, g: 0, b: 0}, PPMPixel{r: 0, g: 1, b: 0}],
+        vec![PPMPixel{r: 0, g: 0, b: 0}, PPMPixel{r: 1, g: 1, b: 1}, PPMPixel{r: 0, g: 1, b: 0}],]};
+        let _ = save_ppm_image(&img, "test.ppm");
 
-        assert!(Path::new("test.png").exists());
+        assert!(Path::new("test.ppm").exists());
 
         // Cleanup
-        fs::remove_file("test.png").unwrap();
+        // fs::remove_file("test.png").unwrap();
     }
 
     #[test]
     fn file_is_saved_correctly() {
-        let img = PPMImage{width: 3, height: 3, data: vec![vec![1, 2, 3], vec![4, 5, 6]]};
-        let _ = save_ppm_image(&img, "test.png");
+        let img = PPMImage{width: 3, height: 2, data: vec![vec![PPMPixel{r: 1, g: 1, b: 1}, PPMPixel{r: 0, g: 0, b: 0}, PPMPixel{r: 0, g: 1, b: 0}],
+                                                           vec![PPMPixel{r: 0, g: 0, b: 0}, PPMPixel{r: 1, g: 1, b: 1}, PPMPixel{r: 0, g: 1, b: 0}],]};
+        let _ = save_ppm_image(&img, "test.ppm");
     }
 
 }
