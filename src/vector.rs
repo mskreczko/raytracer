@@ -1,63 +1,74 @@
-struct Vec3 {
+#[derive(Debug)]
+pub struct Vec3 {
     x: f32,
     y: f32,
     z: f32,
 }
 
 impl Vec3 {
-    fn new(x: f32, y: f32, z: f32) -> Vec3 {
+    pub fn new(x: f32, y: f32, z: f32) -> Vec3 {
         Vec3 { x, y, z }
     }
 
-    fn zero() -> Vec3 {
+    pub fn zero() -> Vec3 {
         Vec3 { x: 0.0, y: 0.0, z: 0.0 }
     }
 
-    fn add(&mut self, other: Vec3) -> &Vec3 {
+    pub fn add(&mut self, other: Vec3) -> &Vec3 {
         self.x += other.x;
         self.y += other.y;
         self.z += other.z;
         self
     }
 
-    fn multiply(&mut self, t: f32) -> &Vec3 {
+    pub fn multiply(&mut self, t: f32) -> &Vec3 {
         self.x *= t;
         self.y *= t;
         self.z *= t;
         self
     }
 
-    fn divide(&mut self, t: f32) -> &Vec3 {
+    pub fn divide(&mut self, t: f32) -> &Vec3 {
         self.multiply((1f32) / t)
     }
 
-    fn length(self) -> f32 {
+    pub fn length(self) -> f32 {
         self.length_squared().sqrt()
     }
 
-    fn length_squared(self) -> f32 {
+    pub fn length_squared(self) -> f32 {
         self.x * self.x + self.y * self.y + self.z * self.z
     }
 }
 
-fn add(v1: Vec3, v2: Vec3) -> Vec3 {
+pub fn add(v1: Vec3, v2: Vec3) -> Vec3 {
     Vec3{x: v1.x + v2.x, y: v1.y + v2.y, z: v1.z + v2.z}
 }
 
-fn sub(v1: Vec3, v2: Vec3) -> Vec3 {
+pub fn sub(v1: Vec3, v2: Vec3) -> Vec3 {
     Vec3{x: v1.x - v2.x, y: v1.y - v2.y, z: v1.z - v2.z}
 }
 
-fn mul(v1: Vec3, v2: Vec3) -> Vec3 {
+pub fn mul(v1: Vec3, v2: Vec3) -> Vec3 {
     Vec3{x: v1.x * v2.x, y: v1.y * v2.y, z: v1.z * v2.z}
 }
 
-fn dot(v1: Vec3, v2: Vec3) -> f32 {
+pub fn mul_scalar(v: Vec3, t: f32) -> Vec3 {
+    Vec3{x: v.x * t, y: v.y * t, z: v.z * t}
+}
+
+pub fn dot(v1: Vec3, v2: Vec3) -> f32 {
     v1.x * v2.x + v1.y * v2.y + v1.z * v2.z
 }
 
-fn cross(v1: Vec3, v2: Vec3) -> Vec3 {
+pub fn cross(v1: Vec3, v2: Vec3) -> Vec3 {
     Vec3{x: v1.y * v2.z - v1.z * v2.y, y: v1.z * v2.x - v1.x * v2.z, z: v1.x * v2.y - v1.y * v2.x}
+}
+
+impl PartialEq for Vec3 {
+    fn eq(&self, other: &Vec3) -> bool {
+        self.x == other.x && self.y == other.y && self.z == other.z
+    }
 }
 
 #[cfg(test)]
