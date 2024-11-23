@@ -50,7 +50,7 @@ mod tests {
         assert!(Path::new("test.ppm").exists());
 
         // Cleanup
-        // fs::remove_file("test.png").unwrap();
+        fs::remove_file("test.ppm").unwrap();
     }
 
     #[test]
@@ -58,6 +58,26 @@ mod tests {
         let img = PPMImage{width: 3, height: 2, data: vec![vec![PPMPixel{r: 1, g: 1, b: 1}, PPMPixel{r: 0, g: 0, b: 0}, PPMPixel{r: 0, g: 1, b: 0}],
                                                            vec![PPMPixel{r: 0, g: 0, b: 0}, PPMPixel{r: 1, g: 1, b: 1}, PPMPixel{r: 0, g: 1, b: 0}],]};
         let _ = save_ppm_image(&img, "test.ppm");
+    }
+
+    #[test]
+    fn render_test_file() {
+        let mut pixels: Vec<Vec<PPMPixel>> = vec![];
+        for i in 0..256 {
+            let mut row = vec![];
+            for j in 0..256 {
+                let r = (i / 255) as f64;
+                let g = (j / 255) as f64;
+                let b = 0.0;
+
+                let ir = (255.999 * r) as u32;
+                let ig = (255.999 * g) as u32;
+                let ib = (255.999 * b) as u32;
+                row.push(PPMPixel{r: ir, g: ig, b: ib})
+            }
+            pixels.push(row);
+        }
+        let _ = save_ppm_image(&PPMImage{width: 256, height: 256, data: pixels}, "test2.ppm");
     }
 
 }
