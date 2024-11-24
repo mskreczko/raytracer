@@ -2,19 +2,19 @@ use std::fs::File;
 use std::io::{LineWriter, Write};
 use std::path::Path;
 
-struct PPMImage {
-    width: u32,
-    height: u32,
-    data: Vec<Vec<PPMPixel>>
+pub struct PPMImage {
+    pub width: u32,
+    pub height: u32,
+    pub data: Vec<Vec<PPMPixel>>
 }
 
-struct PPMPixel {
-    r: u32,
-    g: u32,
-    b: u32
+pub struct PPMPixel {
+    pub r: u32,
+    pub g: u32,
+    pub b: u32
 }
 
-fn save_ppm_image(image: &PPMImage, filename: &str) -> std::io::Result<()> {
+pub fn save_ppm_image(image: &PPMImage, filename: &str) -> std::io::Result<()> {
     let path = Path::new(filename);
 
     let file = match File::create(&path) {
@@ -28,9 +28,9 @@ fn save_ppm_image(image: &PPMImage, filename: &str) -> std::io::Result<()> {
     file.write(b"255\n")?;
     for row in image.data.iter() {
         for el in row.iter() {
-            file.write(format!("{} {} {} ", el.r, el.g, el.b).as_bytes())?;
+            file.write(format!("{} {} {}\n", el.r, el.g, el.b).as_bytes())?;
         }
-        file.write(b"\n")?;
+        // file.write(b"\n")?;
     }
 
     Ok(())
@@ -66,8 +66,8 @@ mod tests {
         for i in 0..256 {
             let mut row = vec![];
             for j in 0..256 {
-                let r = (i / 255) as f64;
-                let g = (j / 255) as f64;
+                let r = (i as f32) / 255f32;
+                let g = (j as f32) / 255f32;
                 let b = 0.0;
 
                 let ir = (255.999 * r) as u32;

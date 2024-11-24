@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug,Copy,Clone)]
 pub struct Vec3 {
     x: f32,
     y: f32,
@@ -6,6 +6,18 @@ pub struct Vec3 {
 }
 
 impl Vec3 {
+    pub fn x(&self) -> f32 {
+        self.x
+    }
+
+    pub fn y(&self) -> f32 {
+        self.y
+    }
+
+    pub fn z(&self) -> f32 {
+        self.z
+    }
+
     pub fn new(x: f32, y: f32, z: f32) -> Vec3 {
         Vec3 { x, y, z }
     }
@@ -53,6 +65,10 @@ pub fn mul(v1: Vec3, v2: Vec3) -> Vec3 {
     Vec3{x: v1.x * v2.x, y: v1.y * v2.y, z: v1.z * v2.z}
 }
 
+pub fn div_scalar(v1: Vec3, t: f32) -> Vec3 {
+    Vec3{x: v1.x / t, y: v1.y / t, z: v1.z / t}
+}
+
 pub fn mul_scalar(v: Vec3, t: f32) -> Vec3 {
     Vec3{x: v.x * t, y: v.y * t, z: v.z * t}
 }
@@ -63,6 +79,10 @@ pub fn dot(v1: Vec3, v2: Vec3) -> f32 {
 
 pub fn cross(v1: Vec3, v2: Vec3) -> Vec3 {
     Vec3{x: v1.y * v2.z - v1.z * v2.y, y: v1.z * v2.x - v1.x * v2.z, z: v1.x * v2.y - v1.y * v2.x}
+}
+
+pub fn unit_vector(v: Vec3) -> Vec3 {
+    div_scalar(v, v.length())
 }
 
 impl PartialEq for Vec3 {
