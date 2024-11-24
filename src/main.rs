@@ -1,8 +1,10 @@
 use crate::ppm::{save_ppm_image, PPMImage, PPMPixel};
+use crate::sphere::Sphere;
 
 mod ppm;
 mod ray;
 mod vector;
+mod sphere;
 
 fn main() {
     let aspect_ratio = 16.0 / 9.0;
@@ -37,6 +39,10 @@ fn main() {
     let pixel_loc = vector::add(viewport_upper_left, vector::mul_scalar(vector::add(pixel_delta_u, pixel_delta_v), 0.5));
 
     let mut img: Vec<Vec<PPMPixel>> = vec![];
+    let sphere = Sphere{
+        center: vector::Vec3::new(0.0, 0.0, -1.0),
+        radius: 0.5
+    };
     for j in 0..(image_height as i32) {
         let mut row = vec![];
         for i in 0..(image_width as i32) {
@@ -44,7 +50,7 @@ fn main() {
             let ray_direction = vector::sub(pixel_center, camera);
             let r = ray::Ray{origin: camera, dir: ray_direction};
 
-            let pixel_color = write_color(r.color());
+            let pixel_color = write_color(r.color(sphere));
             row.push(PPMPixel{r: pixel_color.r, g: pixel_color.g, b: pixel_color.b});
         }
         img.push(row)

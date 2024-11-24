@@ -30,7 +30,6 @@ pub fn save_ppm_image(image: &PPMImage, filename: &str) -> std::io::Result<()> {
         for el in row.iter() {
             file.write(format!("{} {} {}\n", el.r, el.g, el.b).as_bytes())?;
         }
-        // file.write(b"\n")?;
     }
 
     Ok(())

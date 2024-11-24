@@ -1,5 +1,6 @@
 use crate::vector;
 use crate::vector::Vec3;
+use crate::sphere::Sphere;
 
 pub struct Ray {
     pub origin: Vec3,
@@ -11,7 +12,10 @@ impl Ray {
         vector::add(self.origin, vector::mul_scalar(self.dir, t))
     }
 
-    pub fn color(self) -> Vec3 {
+    pub fn color(self, sphere: Sphere) -> Vec3 {
+        if sphere.collide(&self) {
+            return Vec3::new(1.0, 0.0, 0.0)
+        }
         let unit_direction = vector::unit_vector(self.dir);
         let a = 0.5 * (unit_direction.y() + 1.0);
         vector::add(vector::mul_scalar(Vec3::new(1.0, 1.0, 1.0), 1.0 - a),
