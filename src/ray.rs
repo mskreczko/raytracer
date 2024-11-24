@@ -1,5 +1,6 @@
+use std::ops::Mul;
 use crate::vector;
-use crate::vector::Vec3;
+use crate::vector::{unit_vector, Vec3};
 use crate::sphere::Sphere;
 
 pub struct Ray {
@@ -13,8 +14,10 @@ impl Ray {
     }
 
     pub fn color(self, sphere: Sphere) -> Vec3 {
-        if sphere.collide(&self) {
-            return Vec3::new(1.0, 0.0, 0.0)
+        let t = sphere.collide(&self);
+        if (t > 0.0) {
+            let n = unit_vector(self.at(t) - Vec3::new(0.0, 0.0, -1.0));
+            return Vec3::new(n.x() + 1f32, n.y() + 1f32, n.z() + 1.0) * 0.5;
         }
         let unit_direction = vector::unit_vector(self.dir);
         let a = 0.5 * (unit_direction.y() + 1.0);

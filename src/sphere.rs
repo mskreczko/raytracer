@@ -9,12 +9,16 @@ pub struct Sphere {
 }
 
 impl Sphere {
-    pub fn collide(&self, ray: &Ray) -> bool {
+    pub fn collide(&self, ray: &Ray) -> f32 {
         let oc = self.center - ray.origin;
         let a = vector::dot(ray.dir, ray.dir);
         let b = -2.0 * vector::dot(oc, ray.dir);
         let c = vector::dot(oc, oc) - self.radius * self.radius;
         let discriminant = b * b - 4.0 * a * c;
-        discriminant >= 0.0
+
+        if (discriminant < 0.0) {
+            return -1.0;
+        }
+        (-b - discriminant.sqrt()) / (2.0 * a)
     }
 }
