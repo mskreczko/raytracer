@@ -10,7 +10,7 @@ pub struct Sphere {
 
 impl Sphere {
     pub fn collide(&self, ray: &Ray) -> bool {
-        let oc = vector::sub(self.center, ray.origin);
+        let oc = self.center - ray.origin;
         let a = vector::dot(ray.dir, ray.dir);
         let b = -2.0 * vector::dot(oc, ray.dir);
         let c = vector::dot(oc, oc) - self.radius * self.radius;

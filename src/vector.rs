@@ -1,3 +1,5 @@
+use std::ops;
+
 #[derive(Debug,Copy,Clone)]
 pub struct Vec3 {
     x: f32,
@@ -51,26 +53,47 @@ impl Vec3 {
     pub fn length_squared(self) -> f32 {
         self.x * self.x + self.y * self.y + self.z * self.z
     }
+
 }
 
-pub fn add(v1: Vec3, v2: Vec3) -> Vec3 {
-    Vec3{x: v1.x + v2.x, y: v1.y + v2.y, z: v1.z + v2.z}
+impl ops::Add<Vec3> for Vec3 {
+    type Output = Vec3;
+
+    fn add(self, rhs: Vec3) -> Self::Output {
+        Vec3::new(self.x + rhs.x, self.y + rhs.y, self.z + rhs.z)
+    }
 }
 
-pub fn sub(v1: Vec3, v2: Vec3) -> Vec3 {
-    Vec3{x: v1.x - v2.x, y: v1.y - v2.y, z: v1.z - v2.z}
+impl ops::Sub<Vec3> for Vec3 {
+    type Output = Vec3;
+
+    fn sub(self, rhs: Vec3) -> Self::Output {
+        Vec3::new(self.x - rhs.x, self.y - rhs.y, self.z - rhs.z)
+    }
 }
 
-pub fn mul(v1: Vec3, v2: Vec3) -> Vec3 {
-    Vec3{x: v1.x * v2.x, y: v1.y * v2.y, z: v1.z * v2.z}
+impl ops::Mul<Vec3> for Vec3 {
+    type Output = Vec3;
+
+    fn mul(self, rhs: Vec3) -> Self::Output {
+        Vec3::new(self.x * rhs.x, self.y * rhs.y, self.z * rhs.z)
+    }
 }
 
-pub fn div_scalar(v1: Vec3, t: f32) -> Vec3 {
-    Vec3{x: v1.x / t, y: v1.y / t, z: v1.z / t}
+impl ops::Mul<f32> for Vec3 {
+    type Output = Vec3;
+
+    fn mul(self, rhs: f32) -> Self::Output {
+        Vec3::new(self.x * rhs, self.y * rhs, self.z * rhs)
+    }
 }
 
-pub fn mul_scalar(v: Vec3, t: f32) -> Vec3 {
-    Vec3{x: v.x * t, y: v.y * t, z: v.z * t}
+impl ops::Div<f32> for Vec3 {
+    type Output = Vec3;
+
+    fn div(self, rhs: f32) -> Self::Output {
+        Vec3::new(self.x / rhs, self.y / rhs, self.z / rhs)
+    }
 }
 
 pub fn dot(v1: Vec3, v2: Vec3) -> f32 {
@@ -82,7 +105,7 @@ pub fn cross(v1: Vec3, v2: Vec3) -> Vec3 {
 }
 
 pub fn unit_vector(v: Vec3) -> Vec3 {
-    div_scalar(v, v.length())
+    v / v.length()
 }
 
 impl PartialEq for Vec3 {
@@ -139,7 +162,7 @@ mod tests {
         let v1 = Vec3::new(1f32, 2f32, 3f32);
         let v2 = Vec3::new(4f32, 5f32, 6f32);
 
-        let result = add(v1, v2);
+        let result = v1 + v2;
         assert_eq!(5f32, result.x);
         assert_eq!(7f32, result.y);
         assert_eq!(9f32, result.z);
@@ -150,7 +173,7 @@ mod tests {
         let v1 = Vec3::new(1f32, 2f32, 3f32);
         let v2 = Vec3::new(4f32, 5f32, 6f32);
 
-        let result = sub(v1, v2);
+        let result = v1 - v2;
         assert_eq!(-3f32, result.x);
         assert_eq!(-3f32, result.y);
         assert_eq!(-3f32, result.z);
@@ -161,7 +184,7 @@ mod tests {
         let v1 = Vec3::new(1f32, 2f32, 3f32);
         let v2 = Vec3::new(4f32, 5f32, 6f32);
 
-        let result = mul(v1, v2);
+        let result = v1 * v2;
         assert_eq!(4f32, result.x);
         assert_eq!(10f32, result.y);
         assert_eq!(18f32, result.z);

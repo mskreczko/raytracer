@@ -25,18 +25,12 @@ fn main() {
     let viewport_u = vector::Vec3::new(viewport_width as f32, 0.0, 0.0);
     let viewport_v = vector::Vec3::new(0.0, -viewport_height as f32, 0.0);
 
-    let pixel_delta_u = vector::div_scalar(viewport_u, image_width as f32);
-    let pixel_delta_v = vector::div_scalar(viewport_v, image_height as f32);
+    let pixel_delta_u = viewport_u / image_width as f32;
+    let pixel_delta_v = viewport_v / image_height as f32;
 
-    let viewport_upper_left = vector::sub(
-        vector::sub(
-            vector::sub(camera, vector::Vec3::new(0.0, 0.0, focal_length)),
-            vector::div_scalar(viewport_u, 2.0),
-        ),
-        vector::div_scalar(viewport_v, 2.0),
-    );
+    let viewport_upper_left = ((camera - vector::Vec3::new(0.0, 0.0, focal_length)) - viewport_u / 2.0) - viewport_v / 2.0;
 
-    let pixel_loc = vector::add(viewport_upper_left, vector::mul_scalar(vector::add(pixel_delta_u, pixel_delta_v), 0.5));
+    let pixel_loc = viewport_upper_left + (pixel_delta_u + pixel_delta_v) *  0.5;
 
     let mut img: Vec<Vec<PPMPixel>> = vec![];
     let sphere = Sphere{
@@ -46,8 +40,8 @@ fn main() {
     for j in 0..(image_height as i32) {
         let mut row = vec![];
         for i in 0..(image_width as i32) {
-            let pixel_center = vector::add(vector::add(pixel_loc, vector::mul_scalar(pixel_delta_u, i as f32)), vector::mul_scalar(pixel_delta_v, j as f32));
-            let ray_direction = vector::sub(pixel_center, camera);
+            let pixel_center = pixel_loc + pixel_delta_u * i as f32 + pixel_delta_v * j as f32;
+            let ray_direction = pixel_center - camera;
             let r = ray::Ray{origin: camera, dir: ray_direction};
 
             let pixel_color = write_color(r.color(sphere));

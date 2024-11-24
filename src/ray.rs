@@ -9,7 +9,7 @@ pub struct Ray {
 
 impl Ray {
     fn at(self, t: f32) -> Vec3 {
-        vector::add(self.origin, vector::mul_scalar(self.dir, t))
+        self.origin + self.dir * t
     }
 
     pub fn color(self, sphere: Sphere) -> Vec3 {
@@ -18,8 +18,8 @@ impl Ray {
         }
         let unit_direction = vector::unit_vector(self.dir);
         let a = 0.5 * (unit_direction.y() + 1.0);
-        vector::add(vector::mul_scalar(Vec3::new(1.0, 1.0, 1.0), 1.0 - a),
-            vector::mul_scalar(Vec3::new(0.5, 0.7, 1.0), a))
+        Vec3::new(1.0, 1.0, 1.0) * (1.0 - a) +
+            Vec3::new(0.5, 0.7, 1.0) * a
     }
 }
 
